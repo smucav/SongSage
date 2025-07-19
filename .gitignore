@@ -91,6 +91,3 @@ Desktop.ini
 *.tmp
 *.temp
 
-# npm package lock files (if you want to ignore and use yarn.lock instead)
-/frontend/package-lock.json
-
