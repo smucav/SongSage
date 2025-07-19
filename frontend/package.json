@@ -4,7 +4,8 @@
   "description": "React frontend for SongSage, a song management app",
   "scripts": {
     "start": "webpack serve --mode development",
-    "build": "webpack --mode production"
+    "build": "webpack --mode production",
+    "lint": "eslint ."
   },
   "dependencies": {
     "react": "^18.2.0",
