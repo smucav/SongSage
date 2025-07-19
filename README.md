@@ -53,42 +53,81 @@ The server will start on [http://localhost:8080](http://localhost:8080).
 
 ## 🧪 Testing the API
 
-Use **curl**, **Postman**, or your browser to test the `/songs` endpoint:
+Use **curl**, **Postman**, or your browser to test the endpoints:
+
+### ✅ GET all songs (paginated)
 
 ```bash
-curl http://localhost:8080/songs
+curl "http://localhost:8080/songs?page=1&limit=10"
 ```
 
-**Expected Response:**
+**Response:**
 
 ```json
 [
   {"ID": 1, "Title": "Tizita", "Artist": "Muluken Melesse", "Album": "Ethiopian Hits", "Year": 1973},
   {"ID": 2, "Title": "Yene Habesha", "Artist": "Betty G", "Album": "Manew Fitsum", "Year": 2015},
-  {"ID": 3, "Title": "Ere Mela Mela", "Artist": "Mahmoud Ahmed", "Album": "Ere Mela Mela", "Year": 1974},
-  {"ID": 4, "Title": "Tikur Sew", "Artist": "Teddy Afro", "Album": "Tikur Sew", "Year": 2012},
-  {"ID": 5, "Title": "Abebayehosh", "Artist": "Aster Aweke", "Album": "Aster", "Year": 1989}
 ]
 ```
+
+### ✅ POST a new song
+
+```bash
+curl -X POST http://localhost:8080/songs \
+  -H "Content-Type: application/json" \
+  -d '{"title":"Ere Mela Mela","artist":"Mahmoud Ahmed","album":"Ere Mela Mela","year":1974}'
+```
+
+**Response:**
+
+```json
+{"ID": 3, "Title": "Ere Mela Mela", "Artist": "Mahmoud Ahmed", "Album": "Ere Mela Mela", "Year": 1974},
+```
+
+### ✅ PUT update a song
+
+```bash
+curl -X PUT http://localhost:8080/songs/1 \
+  -H "Content-Type: application/json" \
+  -d '{"id":1,"title":"Tizita Updated","artist":"Muluken Melesse","album":"Ethiopian Hits","year":1974}'
+```
+
+**Response:**
+
+```json
+{"ID": 1, "Title": "Tizita", "Artist": "Muluken Melesse", "Album": "Ethiopian Hits", "Year": 1974},
+```
+
+### ✅ DELETE a song
+
+```bash
+curl -X DELETE http://localhost:8080/songs/1
+```
+
+**Response:** `(204 No Content)`
 
 ---
 
 ## 📌 API Endpoints
 
-| Method | Endpoint | Description        |
-| ------ | -------- | ------------------ |
-| GET    | `/songs` | Retrieve all songs |
+| Method | Endpoint                | Description              |
+| ------ | ----------------------- | ------------------------ |
+| GET    | `/songs?page=X&limit=Y` | Retrieve paginated songs |
+| POST   | `/songs`                | Create a new song        |
+| PUT    | `/songs/:id`            | Update a song by ID      |
+| DELETE | `/songs/:id`            | Delete a song by ID      |
 
-✅ **Additional endpoints** (`POST`, `PUT`, `DELETE`) will be added in subsequent steps.
+**Notes:**
+
+* Pagination defaults: `page=1`, `limit=10` (max 100).
+* POST/PUT require valid JSON with `title`, `artist`, `album`, and `year` (1900–2025).
+* Errors return appropriate HTTP status codes (e.g., 400, 404).
 
 ---
 
 ## 🚧 Next Steps
 
-* Implement additional CRUD endpoints (`POST`, `PUT`, `DELETE`) for the Go backend.
-* Set up the React frontend with **Webpack**, **Redux Toolkit**, **Redux-Saga**, and **Emotion**.
-* Document Webpack configuration and further API details.
-
----
-
-**Happy Coding! 🎶✨**
+* Set up the React frontend with manual Webpack configuration.
+* Implement a paginated song list with a stunning, responsive UI.
+* Add CRUD functionality with polished forms and animations.
+* Document Webpack setup and frontend development process.
