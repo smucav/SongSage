@@ -1,0 +1,82 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, backend, frontend ]
+  pull_request:
+    branches: [ main, backend, frontend ]
+
+jobs:
+  backend:
+    if: contains(github.ref, 'main') || contains(github.ref, 'backend')
+    name: Backend - Go Build & Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.21'
+
+      - name: Cache Go modules
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/go/pkg/mod
+            ./backend/go.sum
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-
+
+      - name: Install Go dependencies
+        working-directory: backend
+        run: go mod download
+
+      - name: Build Backend
+        working-directory: backend
+        run: go build -v ./...
+
+      - name: Run Backend Tests
+        working-directory: backend
+        run: go test -v ./...
+
+  frontend:
+    if: contains(github.ref, 'main') || contains(github.ref, 'frontend')
+    name: Frontend - Install, Lint, Build, Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Cache npm
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Install dependencies
+        working-directory: frontend
+        run: npm ci
+
+      - name: Lint Frontend
+        working-directory: frontend
+        run: npm run lint
+
+      - name: Build Frontend
+        working-directory: frontend
+        run: npm run build
+
+      - name: Run Frontend Tests
+        working-directory: frontend
+        run: npm test
