@@ -1,0 +1,93 @@
+# ===================
+# Go backend ignores
+# ===================
+
+# Binaries
+/backend/*.exe
+/backend/*.exe~
+/backend/*.dll
+/backend/*.so
+/backend/*.dylib
+
+# Output binary
+/backend/SongSaga
+
+# Build folders
+/backend/bin/
+/backend/build/
+
+# Dependency directories (Go modules)
+/backend/vendor/
+
+# IDE/editor files
+/backend/.vscode/
+/backend/.idea/
+/backend/*.log
+
+# Go test cache
+/backend/testcache/
+/backend/*.test
+
+# ===================
+# Node / React frontend ignores
+# ===================
+
+# dependencies
+/frontend/node_modules/
+
+# build output
+/frontend/dist/
+/frontend/build/
+
+# logs
+/frontend/npm-debug.log*
+/frontend/yarn-debug.log*
+/frontend/yarn-error.log*
+
+# dotenv environment variables
+/frontend/.env
+/frontend/.env.local
+/frontend/.env.development.local
+/frontend/.env.test.local
+/frontend/.env.production.local
+
+# IDE/editor folders
+/frontend/.vscode/
+/frontend/.idea/
+
+# misc
+/frontend/.DS_Store
+
+# ===================
+# General OS ignores
+# ===================
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# ===================
+# Optional: IDE specific (add if used)
+# ===================
+
+# JetBrains IDEs
+/.idea/
+
+# VSCode
+/.vscode/
+
+# ===================
+# Miscellaneous
+# ===================
+
+# logs
+*.log
+
+# temp files
+*.tmp
+*.temp
+
