@@ -39,15 +39,38 @@ func NewSongStore() *SongStore {
 	}
 }
 
+// corsMiddleware adds CORS headers to allow requests from the frontend
+func corsMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000")
+		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+		w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+
+		// Handle preflight OPTIONS requests
+		if r.Method == http.MethodOptions {
+			w.WriteHeader(http.StatusOK)
+			return
+		}
+
+		next.ServeHTTP(w, r)
+	})
+}
+
 func main() {
 	store := NewSongStore()
 
+	// Create a new router
+	mux := http.NewServeMux()
+
 	// Routes
-	http.HandleFunc("/songs", store.handleSongs)
-	http.HandleFunc("/songs/", store.handleSongByID)
+	mux.HandleFunc("/songs", store.handleSongs)
+	mux.HandleFunc("/songs/", store.handleSongByID)
+
+	// Wrap the router with CORS middleware
+	handler := corsMiddleware(mux)
 
 	log.Println("Server starting on :8080...")
-	if err := http.ListenAndServe(":8080", nil); err != nil {
+	if err := http.ListenAndServe(":8080", handler); err != nil {
 		log.Fatal(err)
 	}
 }
