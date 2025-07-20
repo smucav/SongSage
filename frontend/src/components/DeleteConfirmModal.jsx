@@ -21,7 +21,7 @@ const ModalOverlay = styled(motion.div)`
 
 const ModalContent = styled(motion.div)`
   background: ${(props) => props.theme.cardBackground};
-  padding: 20px;
+  padding: 24px;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   max-width: 400px;
@@ -30,23 +30,33 @@ const ModalContent = styled(motion.div)`
 `;
 
 const Title = styled.h2`
-  color: #3f51b5;
+  color: ${(props) => props.theme.heading};
   font-size: 20px;
+  font-weight: 600;
+  margin: 0 0 16px;
+`;
+
+const Text = styled.p`
+  color: ${(props) => props.theme.text};
+  font-size: 16px;
+  font-weight: 400;
   margin: 0 0 16px;
 `;
 
 const Button = styled.button`
-  padding: 10px;
+  padding: 12px;
   margin: 8px;
   border: none;
   border-radius: 8px;
   cursor: pointer;
   font-size: 16px;
-  transition: transform 0.2s ease;
-  background-color: ${(props) => (props.danger ? '#9c27b0' : '#26a69a')};
-  color: white;
+  font-weight: 500;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  background-color: ${(props) => (props.danger ? props.theme.secondary : props.theme.primary)};
+  color: #ffffff;
   &:hover {
     transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   }
 `;
 
@@ -66,19 +76,17 @@ function DeleteConfirmModal() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      transition={{ duration: 0.3 }}
+      transition={{ duration: 0.4 }}
     >
       <ModalContent
         initial={{ scale: 0.95 }}
         animate={{ scale: 1 }}
         exit={{ scale: 0.95 }}
-        transition={{ duration: 0.3 }}
+        transition={{ duration: 0.4 }}
       >
         <Title>Delete {selectedSong.title}?</Title>
-        <p style={{ color: '#212121', fontSize: '16px' }}>
-          Are you sure you want to delete this song?
-        </p>
-        <div style={{ display: 'flex', justifyContent: 'center', gap: '10px' }}>
+        <Text>Are you sure you want to delete this song?</Text>
+        <div style={{ display: 'flex', justifyContent: 'center', gap: '12px' }}>
           <Button danger onClick={handleDelete}>
             Delete
           </Button>

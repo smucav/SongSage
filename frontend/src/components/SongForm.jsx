@@ -24,7 +24,7 @@ const ModalOverlay = styled(motion.div)`
 
 const ModalContent = styled(motion.div)`
   background: ${(props) => props.theme.cardBackground};
-  padding: 20px;
+  padding: 24px;
   width: 100%;
   max-width: 600px;
   height: 100%;
@@ -43,41 +43,48 @@ const Form = styled.form`
 `;
 
 const Input = styled.input`
-  padding: 10px;
+  padding: 12px;
   border: 1px solid ${(props) => props.theme.border};
   border-radius: 8px;
   font-size: 16px;
+  font-weight: 400;
   background: ${(props) => props.theme.inputBackground};
   color: ${(props) => props.theme.text};
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
   &:focus {
     outline: none;
-    border-color: #26a69a;
+    border-color: ${(props) => props.theme.primary};
+    box-shadow: 0 0 8px rgba(38, 166, 154, 0.2);
   }
 `;
 
 const ErrorText = styled.p`
   color: #d32f2f;
   font-size: 14px;
-  margin: 0;
+  font-weight: 400;
+  margin: 4px 0 0;
 `;
 
 const Button = styled.button`
-  padding: 10px;
+  padding: 12px;
   border: none;
   border-radius: 8px;
   cursor: pointer;
   font-size: 16px;
-  transition: transform 0.2s ease;
-  background-color: ${(props) => (props.cancel ? '#26a69a' : '#9c27b0')};
-  color: white;
+  font-weight: 500;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  background-color: ${(props) => (props.cancel ? props.theme.primary : props.theme.secondary)};
+  color: #ffffff;
   &:hover {
     transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   }
 `;
 
 const Title = styled.h2`
-  color: #3f51b5;
+  color: ${(props) => props.theme.heading};
   font-size: 24px;
+  font-weight: 600;
   margin: 0 0 16px;
 `;
 
@@ -137,13 +144,13 @@ function SongForm() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      transition={{ duration: 0.3 }}
+      transition={{ duration: 0.4 }}
     >
       <ModalContent
         initial={{ x: '100%' }}
         animate={{ x: 0 }}
         exit={{ x: '100%' }}
-        transition={{ duration: 0.3, ease: 'easeInOut' }}
+        transition={{ duration: 0.4, ease: 'easeInOut' }}
       >
         <Title>{selectedSong ? 'Edit Song' : 'Add Song'}</Title>
         <Form onSubmit={handleSubmit}>
@@ -195,7 +202,7 @@ function SongForm() {
               onChange={handleChange}
             />
           </div>
-          <div style={{ display: 'flex', gap: '10px' }}>
+          <div style={{ display: 'flex', gap: '12px' }}>
             <Button type="submit">Save</Button>
             <Button cancel onClick={() => dispatch(closeAddEditModal())}>
               Cancel

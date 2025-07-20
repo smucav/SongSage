@@ -25,11 +25,12 @@ const fadeIn = keyframes`
 `;
 
 const Container = styled.div`
-  padding: 20px;
+  padding: 24px;
   min-height: 100vh;
   background-color: ${(props) => props.theme.background};
   color: ${(props) => props.theme.text};
   font-family: 'Inter', sans-serif;
+  font-weight: 400;
   transition: all 0.3s ease;
 `;
 
@@ -38,81 +39,93 @@ const Header = styled.div`
   flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
-  gap: 10px;
+  margin-bottom: 24px;
+  gap: 12px;
 `;
 
 const SearchInput = styled.input`
-  padding: 10px;
-  width: 200px;
+  padding: 12px;
+  width: 220px;
   border: 1px solid ${(props) => props.theme.border};
   border-radius: 8px;
   background-color: ${(props) => props.theme.inputBackground};
   color: ${(props) => props.theme.text};
   font-size: 16px;
+  font-weight: 400;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
   &:focus {
     outline: none;
-    border-color: #26a69a;
+    border-color: ${(props) => props.theme.primary};
+    box-shadow: 0 0 8px rgba(38, 166, 154, 0.2);
   }
 `;
 
 const ToggleButton = styled.button`
-  padding: 10px 20px;
-  background-color: #26a69a;
-  color: white;
+  padding: 12px 24px;
+  background-color: ${(props) => props.theme.primary};
+  color: #ffffff;
   border: none;
   border-radius: 8px;
   cursor: pointer;
   font-size: 16px;
+  font-weight: 500;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   &:hover {
     transform: scale(1.05);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   }
 `;
 
 const AddButton = styled(ToggleButton)`
-  background-color: #9c27b0;
+  background-color: ${(props) => props.theme.secondary};
 `;
 
 const Select = styled.select`
-  padding: 10px;
+  padding: 12px;
   border: 1px solid ${(props) => props.theme.border};
   border-radius: 8px;
   background-color: ${(props) => props.theme.inputBackground};
   color: ${(props) => props.theme.text};
   font-size: 16px;
+  font-weight: 400;
+  transition: border-color 0.2s ease;
+  &:focus {
+    outline: none;
+    border-color: ${(props) => props.theme.primary};
+  }
 `;
 
 const CardGrid = styled(motion.div)`
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1.2rem;
 `;
 
 const Pagination = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 10px;
-  margin-top: 20px;
+  gap: 12px;
+  margin-top: 24px;
 `;
 
 const PageButton = styled.button`
-  padding: 8px 16px;
-  background-color: ${(props) => (props.active ? '#3f51b5' : '#26a69a')};
-  color: white;
+  padding: 10px 20px;
+  background-color: ${(props) => (props.active ? props.theme.heading : props.theme.primary)};
+  color: #ffffff;
   border: none;
   border-radius: 8px;
   cursor: pointer;
   font-size: 16px;
-  transition: transform 0.2s ease;
+  font-weight: 500;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
   &:disabled {
-    background-color: #ccc;
+    background-color: ${(props) => props.theme.border};
     cursor: not-allowed;
   }
   &:hover:not(:disabled) {
     transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   }
 `;
 
@@ -158,7 +171,6 @@ function SongList() {
     }
   };
 
-  // Apply sorting to the songs array for rendering
   const sortedSongs = [...songs].sort((a, b) => {
     const aValue = a[sortBy];
     const bValue = b[sortBy];
@@ -181,7 +193,7 @@ function SongList() {
           value={search}
           onChange={handleSearch}
         />
-        <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
           <Select onChange={handleSort} value={`${sortBy}:${sortOrder}`}>
             <option value="title:asc">Title (A-Z)</option>
             <option value="title:desc">Title (Z-A)</option>
@@ -198,12 +210,12 @@ function SongList() {
         </div>
       </Header>
 
-      {loading && <p>Loading...</p>}
+      {loading && <p style={{ fontSize: '16px', color: theme.text }}>Loading...</p>}
       {view === 'cards' ? (
         <CardGrid
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
+          transition={{ duration: 0.6 }}
         >
           {sortedSongs.map((song) => (
             <SongCard key={song.id} song={song} />
@@ -220,7 +232,7 @@ function SongList() {
         >
           Previous
         </PageButton>
-        <span>
+        <span style={{ fontSize: '16px', color: theme.text }}>
           Page {page} of {totalPages || 1}
         </span>
         <PageButton

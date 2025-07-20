@@ -4,7 +4,9 @@
   "description": "React frontend for SongSage, a song management app",
   "scripts": {
     "start": "webpack serve --mode development",
-    "build": "webpack --mode production"
+    "build": "webpack --mode production",
+    "test": "jest",
+    "test:watch": "jest --watch"
   },
   "dependencies": {
     "react": "^18.2.0",
@@ -29,6 +31,13 @@
     "file-loader": "^6.2.0",
     "dotenv-webpack": "^8.0.1",
     "css-loader": "^6.8.1",
-    "style-loader": "^3.3.3"
+    "style-loader": "^3.3.3",
+    "@testing-library/react": "^14.0.0",
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/user-event": "^14.4.3",
+    "jest": "^29.6.2",
+    "jest-environment-jsdom": "^29.6.2",
+    "axios-mock-adapter": "^1.21.5",
+    "@babel/plugin-transform-runtime": "^7.22.9"
   }
 }
