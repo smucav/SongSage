@@ -1,5 +1,6 @@
 const path = require('path');
 const Dotenv = require('dotenv-webpack');
+const CopyPlugin = require('copy-webpack-plugin'); // 👈 ADD THIS
 
 module.exports = {
   entry: './src/index.jsx',
@@ -44,6 +45,11 @@ module.exports = {
     new Dotenv({
       path: './.env',
       systemvars: true,
+    }),
+    new CopyPlugin({
+      patterns: [
+        { from: 'public/_redirects', to: '' },
+      ],
     }),
   ],
 };
