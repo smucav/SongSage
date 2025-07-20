@@ -125,6 +125,23 @@ curl -X DELETE http://localhost:8080/songs/1
 
 ---
 
+## Webpack Configuration Details
+
+**Purpose**: Manual Webpack setup for React, avoiding Create React App.
+Features:
+
+Processes JSX with ```babel-loader (@babel/preset-react, @babel/preset-env).```
+
+Handles SVGs/images with **file-loader**, outputting to **dist/assets/**.
+
+Supports environment variables via **dotenv-webpack** (e.g., **API_BASE_URL**).
+
+Dev server on port 3000 with hot reloading.
+
+Verification: Tested by running npm ```start```, checking browser rendering, and inspecting bundle output.
+
+---
+
 ## 🚧 Next Steps
 
 * Set up the React frontend with manual Webpack configuration.
