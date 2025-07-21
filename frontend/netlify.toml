@@ -1,9 +1,8 @@
-# netlify.toml
 [build]
-  publish = dist
-  command = npx webpack --mode production
+  publish = "frontend/dist"
+  command = "cd frontend && npx webpack --mode production"
 
 [[redirects]]
-  from = /*
-  to = /index.html
+  from = "/*"
+  to = "/index.html"
   status = 200
