@@ -1,10 +1,111 @@
-# SongSaga
+# 🎵 SongSaga — Song Manager
 
-**SongSaga** is a full-stack application to manage a list of songs, built with a **React** frontend and a **Go** backend. The frontend interacts with a REST API to perform CRUD operations on songs.
+This project is a **full-stack application** to manage a list of songs.
+It demonstrates my frontend skills using **React**, **Redux Toolkit**, **Redux-Saga**, **Emotion**, **Styled System**, and a **custom Webpack setup**.
 
 ---
 
-## 📁 Project Structure
+## 📌 **Features**
+
+✅ Display paginated list of songs (title, artist, album, year, etc.)
+✅ CRUD operations (Create, Read, Update, Delete) with REST API
+✅ State management with **Redux Toolkit**
+✅ API side effects with **Redux-Saga**
+✅ Theming & responsive styling with **Emotion** + **Styled System**
+✅ Custom **Webpack configuration** (no CRA)
+
+---
+
+## ⚙️ **Backend**
+
+* The backend is a simple Go HTTP server exposing `/songs` endpoints.
+* Supports:
+
+  * `GET /songs?page=&limit=` for pagination.
+  * `POST /songs` to add new songs.
+  * `PUT /songs/:id` to update a song.
+  * `DELETE /songs/:id` to delete a song.
+* **CORS** is configured to allow requests from the frontend.
+
+---
+
+## ⚙️ **Frontend Setup**
+
+### 1️⃣ Install dependencies
+
+```bash
+npm install
+```
+
+### 2️⃣ Run the backend
+
+```bash
+# From backend folder
+go run main.go
+```
+
+By default, the backend runs at [http://localhost:8080](http://localhost:8080).
+
+### 3️⃣ Run the frontend
+
+```bash
+npx webpack serve
+```
+
+The frontend runs at [http://localhost:3000](http://localhost:3000).
+
+---
+
+## 🛠️ Webpack Configuration
+
+**No CRA:** Webpack is configured manually (`webpack.config.js`).
+
+Features:
+
+* Handles `.jsx` files via Babel.
+* Uses `dotenv-webpack` to inject environment variables (`API_BASE_URL`).
+* Uses `HtmlWebpackPlugin` to generate `index.html`.
+* Custom rule for images/SVGs can be added easily.
+* The config ensures a clean dev workflow with `webpack-dev-server`.
+
+---
+
+## ✅ Testing
+
+This project includes:
+
+* **Unit tests:** for the Redux slice (`songsSlice`).
+* **Component tests:** for `AddSong` form using React Testing Library.
+
+All tests are run with Jest + `jest-environment-jsdom`.
+
+**Run all tests:**
+
+```bash
+npx jest
+```
+---
+
+## 🚀 Bonus Points
+
+✅ Manual Webpack config
+✅ Pagination
+✅ Tests with Jest
+✅ Clear commit history with conventional commits
+✅ Ready for deployment — can be hosted on Netlify/Vercel
+
+---
+
+## 📝 How I verified it works
+
+* Manually tested CRUD + pagination in the browser.
+* Checked backend logs for requests.
+* Ran Jest unit and component tests (`npx jest`).
+* Debugged using Chrome DevTools & console logs.
+
+---
+
+## 📂 Project Structure
 
 ```
 SongSaga/
@@ -12,139 +113,26 @@ SongSaga/
 │   ├── main.go         # Go backend server
 │   ├── go.mod          # Go module file
 │   └── go.sum          # Go dependencies
-├── frontend/           # React frontend (to be implemented)
+├── frontend/
+|   ├── src/
+|   │   ├── app/         # store.js, theme.js
+|   │   ├── features/    # Redux slice & saga
+|   │   ├── pages/       # AddSong, EditSong, SongList
+|   │   ├── components/  # Styled Button etc.
+|   ├── public/
+|   │   └── index.html
+|   ├── webpack.config.js
+|   ├── .env
+|   ├── babel.config.js
+|   ├── jest.config (in package.json)
 └── README.md           # Project documentation
 ```
-
 ---
 
-## ⚙️ Backend Setup Instructions
+## ✅ Run it locally
 
-### ✅ Prerequisites
-
-* Install **Go** (version **1.21** or later): [Download Go](https://go.dev/dl/)
-* Ensure **Go** is added to your system `PATH`.
-
----
-
-### 🚀 Setup
-
-1. Navigate to the backend directory:
-
-   ```bash
-   cd backend
-   ```
-
-2. Initialize the Go module (if not already done):
-
-   ```bash
-   go mod init SongSaga/backend
-   ```
-
-3. Run the server:
-
-   ```bash
-   go run main.go
-   ```
-
-The server will start on [http://localhost:8080](http://localhost:8080).
-
----
-
-## 🧪 Testing the API
-
-Use **curl**, **Postman**, or your browser to test the endpoints:
-
-### ✅ GET all songs (paginated)
-
-```bash
-curl "http://localhost:8080/songs?page=1&limit=10"
-```
-
-**Response:**
-
-```json
-[
-  {"ID": 1, "Title": "Tizita", "Artist": "Muluken Melesse", "Album": "Ethiopian Hits", "Year": 1973},
-  {"ID": 2, "Title": "Yene Habesha", "Artist": "Betty G", "Album": "Manew Fitsum", "Year": 2015},
-]
-```
-
-### ✅ POST a new song
-
-```bash
-curl -X POST http://localhost:8080/songs \
-  -H "Content-Type: application/json" \
-  -d '{"title":"Ere Mela Mela","artist":"Mahmoud Ahmed","album":"Ere Mela Mela","year":1974}'
-```
-
-**Response:**
-
-```json
-{"ID": 3, "Title": "Ere Mela Mela", "Artist": "Mahmoud Ahmed", "Album": "Ere Mela Mela", "Year": 1974},
-```
-
-### ✅ PUT update a song
-
-```bash
-curl -X PUT http://localhost:8080/songs/1 \
-  -H "Content-Type: application/json" \
-  -d '{"id":1,"title":"Tizita Updated","artist":"Muluken Melesse","album":"Ethiopian Hits","year":1974}'
-```
-
-**Response:**
-
-```json
-{"ID": 1, "Title": "Tizita", "Artist": "Muluken Melesse", "Album": "Ethiopian Hits", "Year": 1974},
-```
-
-### ✅ DELETE a song
-
-```bash
-curl -X DELETE http://localhost:8080/songs/1
-```
-
-**Response:** `(204 No Content)`
-
----
-
-## 📌 API Endpoints
-
-| Method | Endpoint                | Description              |
-| ------ | ----------------------- | ------------------------ |
-| GET    | `/songs?page=X&limit=Y` | Retrieve paginated songs |
-| POST   | `/songs`                | Create a new song        |
-| PUT    | `/songs/:id`            | Update a song by ID      |
-| DELETE | `/songs/:id`            | Delete a song by ID      |
-
-**Notes:**
-
-* Pagination defaults: `page=1`, `limit=10` (max 100).
-* POST/PUT require valid JSON with `title`, `artist`, `album`, and `year` (1900–2025).
-* Errors return appropriate HTTP status codes (e.g., 400, 404).
-
----
-
-## Webpack Configuration Details
-
-**Purpose**: Manual Webpack setup for React, avoiding Create React App.
-Features:
-
-Processes JSX with ```babel-loader (@babel/preset-react, @babel/preset-env).```
-
-Handles SVGs/images with **file-loader**, outputting to **dist/assets/**.
-
-Supports environment variables via **dotenv-webpack** (e.g., **API_BASE_URL**).
-
-Dev server on port 3000 with hot reloading.
-
-Verification: Tested by running npm ```start```, checking browser rendering, and inspecting bundle output.
-
----
-
-## 🚧 Next Steps
-
-* Set up the React frontend with manual Webpack configuration.
-* Implement a paginated song list with a stunning, responsive UI.
-* Add CRUD functionality with polished forms and animations.
-* Document Webpack setup and frontend development process.
+1. Clone this repo.
+2. `npm install`
+3. Start backend: `go run main.go`
+4. Start frontend: `npx webpack serve`
+5. Visit [http://localhost:3000](http://localhost:3000)
