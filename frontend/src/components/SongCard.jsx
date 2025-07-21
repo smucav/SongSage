@@ -1,70 +1,72 @@
 import React from 'react';
 import styled from '@emotion/styled';
-import { useDispatch } from 'react-redux';
-import { openAddEditModal, openDeleteModal } from '../features/songs/songsSlice';
+import { motion } from 'framer-motion';
+import { FaEdit, FaTrash } from 'react-icons/fa';
+import { Link } from 'react-router-dom';
+import { space, color } from 'styled-system';
 
-const Card = styled.div`
-  background-color: ${(props) => props.theme.cardBackground};
-  border: 1px solid ${(props) => props.theme.border};
-  border-radius: 12px;
-  padding: 16px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  &:hover {
-    transform: scale(1.05);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  }
+const Card = styled(motion.div)`
+  background: linear-gradient(135deg, ${props => props.theme.colors.primary} 0%, ${props => props.theme.colors.secondary} 100%);
+  border-radius: 8px;
+  padding: ${props => props.theme.space[3]}px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  color: white;
+  ${space}
+  ${color}
 `;
 
 const Title = styled.h3`
-  color: ${(props) => props.theme.heading};
-  margin: 0 0 8px;
-  font-size: 20px;
-  font-weight: 600;
+  font-size: ${props => props.theme.fontSizes[3]}px;
+  margin-bottom: ${props => props.theme.space[2]}px;
 `;
 
-const Text = styled.p`
-  color: ${(props) => props.theme.text};
-  margin: 4px 0;
-  font-size: 16px;
-  font-weight: 400;
+const Info = styled.p`
+  font-size: ${props => props.theme.fontSizes[1]}px;
+  margin: 0;
 `;
 
-const Button = styled.button`
-  padding: 8px 16px;
-  margin: 4px;
+const ButtonGroup = styled.div`
+  display: flex;
+  gap: ${props => props.theme.space[2]}px;
+  margin-top: ${props => props.theme.space[3]}px;
+`;
+
+const IconButton = styled.button`
+  background: rgba(255, 255, 255, 0.2);
   border: none;
-  border-radius: 8px;
+  border-radius: 4px;
+  padding: ${props => props.theme.space[2]}px;
   cursor: pointer;
-  font-size: 16px;
-  font-weight: 500;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  background-color: ${(props) => (props.danger ? props.theme.secondary : props.theme.primary)};
-  color: #ffffff;
+  color: white;
+  display: flex;
+  align-items: center;
   &:hover {
-    transform: scale(1.05);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    background: rgba(255, 255, 255, 0.3);
   }
 `;
 
-function SongCard({ song }) {
-  const dispatch = useDispatch();
-
+export default function SongCard({ song, onDelete }) {
   return (
-    <Card>
+    <Card
+      whileHover={{ scale: 1.05 }}
+      whileTap={{ scale: 0.95 }}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
+    >
       <Title>{song.title}</Title>
-      <Text>Artist: {song.artist}</Text>
-      <Text>Album: {song.album}</Text>
-      <Text>Year: {song.year}</Text>
-      <Text>Genre: {song.genre || 'N/A'}</Text>
-      <div>
-        <Button onClick={() => dispatch(openAddEditModal(song))}>Edit</Button>
-        <Button danger onClick={() => dispatch(openDeleteModal(song))}>
-          Delete
-        </Button>
-      </div>
+      <Info>Artist: {song.artist}</Info>
+      <Info>Album: {song.album}</Info>
+      <Info>Year: {song.year}</Info>
+      <Info>Genre: {song.genre || 'N/A'}</Info>
+      <ButtonGroup>
+        <IconButton as={Link} to={`/edit/${song.id}`}>
+          <FaEdit />
+        </IconButton>
+        <IconButton onClick={() => onDelete(song.id)}>
+          <FaTrash />
+        </IconButton>
+      </ButtonGroup>
     </Card>
   );
 }
-
-export default SongCard;

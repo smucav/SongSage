@@ -1,17 +1,25 @@
 import React from 'react';
-import { Provider } from 'react-redux';
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import SongList from './components/SongList';
-import store from './store';
+import { Routes, Route } from 'react-router-dom';
+import SongList from './pages/SongList';
+import AddSong from './pages/AddSong';
+import EditSong from './pages/EditSong';
+import styled from '@emotion/styled';
 
-function App() {
+const Container = styled.div`
+  font-family: 'Inter', sans-serif;
+  background-color: ${props => props.theme.colors.background};
+  min-height: 100vh;
+  padding: 2rem;
+`;
+
+export default function App() {
   return (
-    <Provider store={store}>
-      <SongList />
-      <ToastContainer position="top-right" autoClose={3000} />
-    </Provider>
+    <Container>
+      <Routes>
+        <Route path="/" element={<SongList />} />
+        <Route path="/add" element={<AddSong />} />
+        <Route path="/edit/:id" element={<EditSong />} />
+      </Routes>
+    </Container>
   );
 }
-
-export default App;
