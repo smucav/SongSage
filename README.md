@@ -7,12 +7,12 @@ It demonstrates my frontend skills using **React**, **Redux Toolkit**, **Redux-S
 
 ## 📌 **Features**
 
-✅ Display paginated list of songs (title, artist, album, year, etc.)
-✅ CRUD operations (Create, Read, Update, Delete) with REST API
-✅ State management with **Redux Toolkit**
-✅ API side effects with **Redux-Saga**
-✅ Theming & responsive styling with **Emotion** + **Styled System**
-✅ Custom **Webpack configuration** (no CRA)
+- ✅ Display paginated list of songs (title, artist, album, year, etc.)
+- ✅ CRUD operations (Create, Read, Update, Delete) with REST API
+- ✅ State management with **Redux Toolkit**
+- ✅ API side effects with **Redux-Saga**
+- ✅ Theming & responsive styling with **Emotion** + **Styled System**
+- ✅ Custom **Webpack configuration** (no CRA)
 
 ---
 
@@ -88,11 +88,11 @@ npx jest
 
 ## 🚀 Bonus Points
 
-✅ Manual Webpack config
-✅ Pagination
-✅ Tests with Jest
-✅ Clear commit history with conventional commits
-✅ Ready for deployment — can be hosted on Netlify/Vercel
+- ✅ Manual Webpack config
+- ✅ Pagination
+- ✅ Tests with Jest
+- ✅ Clear commit history with conventional commits
+- ✅ Ready for deployment — can be hosted on Netlify/Vercel
 
 ---
 
