@@ -1,100 +1,74 @@
 import React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
 import styled from '@emotion/styled';
 import { motion } from 'framer-motion';
-import { deleteSongStart, closeDeleteModal } from '../features/songs/songsSlice';
-import { toast } from 'react-toastify';
+import Button from './Button';
+import { space } from 'styled-system';
 
-const ModalOverlay = styled(motion.div)`
+const Overlay = styled(motion.div)`
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.3);
-  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
   z-index: 1000;
 `;
 
 const ModalContent = styled(motion.div)`
-  background: ${(props) => props.theme.cardBackground};
-  padding: 24px;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  max-width: 400px;
-  width: 100%;
-  text-align: center;
-`;
-
-const Title = styled.h2`
-  color: ${(props) => props.theme.heading};
-  font-size: 20px;
-  font-weight: 600;
-  margin: 0 0 16px;
-`;
-
-const Text = styled.p`
-  color: ${(props) => props.theme.text};
-  font-size: 16px;
-  font-weight: 400;
-  margin: 0 0 16px;
-`;
-
-const Button = styled.button`
-  padding: 12px;
-  margin: 8px;
-  border: none;
+  background: white;
   border-radius: 8px;
-  cursor: pointer;
-  font-size: 16px;
-  font-weight: 500;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  background-color: ${(props) => (props.danger ? props.theme.secondary : props.theme.primary)};
-  color: #ffffff;
-  &:hover {
-    transform: scale(1.05);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  }
+  padding: ${props => props.theme.space[4]}px;
+  max-width: 400px;
+  width: 90%;
+  text-align: center;
+  ${space}
 `;
 
-function DeleteConfirmModal() {
-  const dispatch = useDispatch();
-  const { isDeleteModalOpen, selectedSong } = useSelector((state) => state.songs);
+const ButtonGroup = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: ${props => props.theme.space[3]}px;
+  margin-top: ${props => props.theme.space[3]}px;
+`;
 
-  const handleDelete = () => {
-    dispatch(deleteSongStart(selectedSong.id));
-    toast.success('Song deleted!');
-  };
-
-  if (!isDeleteModalOpen) return null;
+export default function DeleteConfirmModal({ isOpen, songTitle, onConfirm, onCancel }) {
+  if (!isOpen) return null;
 
   return (
-    <ModalOverlay
+    <Overlay
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      transition={{ duration: 0.4 }}
+      onClick={onCancel}
     >
       <ModalContent
-        initial={{ scale: 0.95 }}
+        initial={{ scale: 0.8 }}
         animate={{ scale: 1 }}
-        exit={{ scale: 0.95 }}
-        transition={{ duration: 0.4 }}
+        exit={{ scale: 0.8 }}
+        onClick={e => e.stopPropagation()}
       >
-        <Title>Delete {selectedSong.title}?</Title>
-        <Text>Are you sure you want to delete this song?</Text>
-        <div style={{ display: 'flex', justifyContent: 'center', gap: '12px' }}>
-          <Button danger onClick={handleDelete}>
+        <h2 className="text-xl font-bold mb-4 text-gray-800">Confirm Deletion</h2>
+        <p className="text-gray-600 mb-4">
+          Are you sure you want to delete "<strong>{songTitle}</strong>"?
+        </p>
+        <ButtonGroup>
+          <Button
+            onClick={onCancel}
+            className="bg-gray-500 hover:bg-gray-600 text-white"
+          >
+            Cancel
+          </Button>
+          <Button
+            onClick={onConfirm}
+            className="bg-blue-600 hover:bg-blue-700 text-white"
+          >
             Delete
           </Button>
-          <Button onClick={() => dispatch(closeDeleteModal())}>Cancel</Button>
-        </div>
+        </ButtonGroup>
       </ModalContent>
-    </ModalOverlay>
+    </Overlay>
   );
 }
-
-export default DeleteConfirmModal;
