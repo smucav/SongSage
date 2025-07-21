@@ -1,6 +1,7 @@
 [build]
-  publish = "frontend/dist"
-  command = "cd frontend && npx webpack --mode production"
+  base = "frontend"
+  publish = "dist"
+  command = "npx webpack --mode production"
 
 [[redirects]]
   from = "/*"
