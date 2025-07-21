@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import styled from '@emotion/styled';
 import Modal from '../components/Modal';
+import UpdateConfirmModal from '../components/UpdateConfirmModal';
 import Button from '../components/Button';
 
 const Form = styled.form`
@@ -33,6 +34,7 @@ export default function EditSong() {
   });
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
+  const [updateModal, setUpdateModal] = useState({ isOpen: false, success: false, message: '' });
 
   useEffect(() => {
     fetch(`${process.env.API_BASE_URL}/songs?page=1&limit=100`)
@@ -43,15 +45,21 @@ export default function EditSong() {
           setSong(found);
           setLoading(false);
         } else {
-          alert('Song not found');
-          navigate('/');
+          setUpdateModal({
+            isOpen: true,
+            success: false,
+            message: 'Song not found',
+          });
         }
       })
       .catch(() => {
-        alert('Error fetching song');
-        navigate('/');
+        setUpdateModal({
+          isOpen: true,
+          success: false,
+          message: 'Error fetching song',
+        });
       });
-  }, [id, navigate]);
+  }, [id]);
 
   const handleChange = e => {
     const { name, value } = e.target;
@@ -68,67 +76,90 @@ export default function EditSong() {
     });
     setSubmitting(false);
     if (res.ok) {
-      alert('Song updated!');
-      navigate('/');
+      setUpdateModal({
+        isOpen: true,
+        success: true,
+        message: 'Song updated successfully!',
+      });
     } else {
-      alert('Error updating song.');
+      setUpdateModal({
+        isOpen: true,
+        success: false,
+        message: 'Error updating song.',
+      });
+    }
+  };
+
+  const handleCloseUpdateModal = () => {
+    setUpdateModal({ isOpen: false, success: false, message: '' });
+    if (updateModal.success || updateModal.message.includes('not found') || updateModal.message.includes('Error fetching')) {
+      navigate('/');
     }
   };
 
   if (loading) return <div className="text-center p-4">Loading...</div>;
 
   return (
-    <Modal isOpen={isOpen} onClose={() => navigate('/')}>
-      <h2 className="text-2xl font-bold mb-4">Edit Song</h2>
-      <Form onSubmit={handleSubmit}>
-        <Input
-          name="title"
-          placeholder="Title"
-          value={song.title}
-          onChange={handleChange}
-          required
-          className="focus:ring-2 focus:ring-blue-500"
-        />
-        <Input
-          name="artist"
-          placeholder="Artist"
-          value={song.artist}
-          onChange={handleChange}
-          required
-          className="focus:ring-2 focus:ring-blue-500"
-        />
-        <Input
-          name="album"
-          placeholder="Album"
-          value={song.album}
-          onChange={handleChange}
-          required
-          className="focus:ring-2 focus:ring-blue-500"
-        />
-        <Input
-          name="year"
-          type="number"
-          placeholder="Year"
-          value={song.year}
-          onChange={handleChange}
-          required
-          className="focus:ring-2 focus:ring-blue-500"
-        />
-        <Input
-          name="genre"
-          placeholder="Genre"
-          value={song.genre}
-          onChange={handleChange}
-          className="focus:ring-2 focus:ring-blue-500"
-        />
-        <Button
-          type="submit"
-          disabled={submitting}
-          className="bg-blue-600 hover:bg-blue-700"
-        >
-          {submitting ? 'Updating...' : 'Update Song'}
-        </Button>
-      </Form>
-    </Modal>
+    <>
+      <Modal isOpen={isOpen} onClose={() => navigate('/')}>
+        <h2 className="text-2xl font-bold mb-4">Edit Song</h2>
+        <Form onSubmit={handleSubmit}>
+          <Input
+            name="title"
+            placeholder="Title"
+            value={song.title}
+            onChange={handleChange}
+            required
+            className="focus:ring-2 focus:ring-blue-500"
+          />
+          <Input
+            name="artist"
+            placeholder="Artist"
+            value={song.artist}
+            onChange={handleChange}
+            required
+            className="focus:ring-2 focus:ring-blue-500"
+          />
+          <Input
+            name="album"
+            placeholder="Album"
+            value={song.album}
+            onChange={handleChange}
+            required
+            className="focus:ring-2 focus:ring-blue-500"
+          />
+          <Input
+            name="year"
+            type="number"
+            placeholder="Year"
+            value={song.year}
+            onChange={handleChange}
+            required
+            className="focus:ring-2 focus:ring-blue-500"
+          />
+          <Input
+            name="genre"
+            placeholder="Genre"
+            value={song.genre}
+            onChange={handleChange}
+            className="focus:ring-2 focus:ring-blue-500"
+          />
+          <Button
+            type="submit"
+            disabled={submitting}
+            className="bg-blue-600 hover:bg-blue-700"
+          >
+            {submitting ? 'Updating...' : 'Update Song'}
+          </Button>
+        </Form>
+      </Modal>
+      <UpdateConfirmModal
+        isOpen={updateModal.isOpen}
+        success={updateModal.success}
+        songTitle={song.title}
+        message={updateModal.message}
+        onClose={handleCloseUpdateModal}
+      />
+    </>
   );
 }
