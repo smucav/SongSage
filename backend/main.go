@@ -31,7 +31,7 @@ type SongStore struct {
 func NewSongStore() *SongStore {
 	return &SongStore{
 		songs: []Song{
-			{ID: 1, Title: "Tizita", Artist: "Muluken Melesse", Album: "Ethiopian Hits", Year: 1973, Genre: "Traditional"},
+			{ID: 1, Title: "Tizitaa", Artist: "Muluken Melesse", Album: "Ethiopian Hits", Year: 1973, Genre: "Traditional"},
 			{ID: 2, Title: "Yene Habesha", Artist: "Betty G", Album: "Manew Fitsum", Year: 2015, Genre: "Pop"},
 			{ID: 3, Title: "Ere Mela Mela", Artist: "Mahmoud Ahmed", Album: "Ere Mela Mela", Year: 1974, Genre: "Jazz"},
 			{ID: 4, Title: "Tikur Sew", Artist: "Teddy Afro", Album: "Tikur Sew", Year: 2012, Genre: "Reggae"},
