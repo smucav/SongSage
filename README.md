@@ -1,35 +1,36 @@
 # 🎵 SongSaga — Song Manager
+[songsage.netlify.app](https://songsage.netlify.app) 🚀
 
-This project is a **full-stack application** to manage a list of songs.
-It demonstrates my frontend skills using **React**, **Redux Toolkit**, **Redux-Saga**, **Emotion**, **Styled System**, and a **custom Webpack setup**.
-
----
-
-## 📌 **Features**
-
-- ✅ Display paginated list of songs (title, artist, album, year, etc.)
-- ✅ CRUD operations (Create, Read, Update, Delete) with REST API
-- ✅ State management with **Redux Toolkit**
-- ✅ API side effects with **Redux-Saga**
-- ✅ Theming & responsive styling with **Emotion** + **Styled System**
-- ✅ Custom **Webpack configuration** (no CRA)
+**SongSaga** is a **full-stack application** to manage a list of songs.
+It showcases a modern React frontend with **Redux Toolkit**, **Redux-Saga**, **Emotion**, **Styled System**, and a **custom Webpack setup**, plus a simple **Go backend API**.
 
 ---
 
-## ⚙️ **Backend**
+## 📌 Features
 
-* The backend is a simple Go HTTP server exposing `/songs` endpoints.
-* Supports:
-
-  * `GET /songs?page=&limit=` for pagination.
-  * `POST /songs` to add new songs.
-  * `PUT /songs/:id` to update a song.
-  * `DELETE /songs/:id` to delete a song.
-* **CORS** is configured to allow requests from the frontend.
+* ✅ Display paginated list of songs (title, artist, album, year, genre)
+* ✅ Full CRUD operations (Create, Read, Update, Delete) via REST API
+* ✅ Global state management with **Redux Toolkit**
+* ✅ API side effects handled with **Redux-Saga**
+* ✅ Theming & responsive styling using **Emotion** + **Styled System**
+* ✅ Fully custom **Webpack configuration** (no CRA)
 
 ---
 
-## ⚙️ **Frontend Setup**
+## ⚙️ Backend
+
+The backend is a lightweight **Go HTTP server** with:
+
+* `GET /songs?page=&limit=` — paginated list
+* `POST /songs` — add new song
+* `PUT /songs/:id` — update a song
+* `DELETE /songs/:id` — delete a song
+
+**CORS** is configured to allow requests from your frontend URL.
+
+---
+
+## ⚙️ Frontend Setup
 
 ### 1️⃣ Install dependencies
 
@@ -56,52 +57,81 @@ The frontend runs at [http://localhost:3000](http://localhost:3000).
 
 ---
 
+## 📡 Production Deployment
+
+SongSaga is production-ready!
+The recommended deployment is:
+
+* **Frontend** → [Netlify](https://www.netlify.com)
+* **Backend** → [Railway](https://railway.app) or any Go-compatible host
+
+✅ **Important for CORS:**
+Update your Go CORS middleware to handle both local and production origins:
+
+```go
+origin := r.Header.Get("Origin")
+if origin == "http://localhost:3000" || origin == "https://songsage.netlify.app" {
+  w.Header().Set("Access-Control-Allow-Origin", origin)
+}
+```
+
+✅ **Important for API calls:**
+In **production**, your frontend must fetch the backend with the correct domain.
+So set the `API_BASE_URL` as a **Netlify Environment Variable**:
+
+```
+API_BASE_URL=https://YOUR-BACKEND.up.railway.app
+```
+
+Netlify automatically injects this at build time (thanks to `dotenv-webpack`).
+
+---
+
 ## 🛠️ Webpack Configuration
 
-**No CRA:** Webpack is configured manually (`webpack.config.js`).
+No CRA! 🎉
+Webpack is configured manually in `webpack.config.js`:
 
-Features:
-
-* Handles `.jsx` files via Babel.
-* Uses `dotenv-webpack` to inject environment variables (`API_BASE_URL`).
-* Uses `HtmlWebpackPlugin` to generate `index.html`.
-* Custom rule for images/SVGs can be added easily.
-* The config ensures a clean dev workflow with `webpack-dev-server`.
+* Transpiles `.jsx` with Babel
+* Loads `.env` values and Netlify environment variables using `dotenv-webpack`
+* Generates `index.html` with `HtmlWebpackPlugin`
+* Handles static assets (images/SVGs)
+* Dev server runs on port 3000 with `historyApiFallback` for routing
 
 ---
 
 ## ✅ Testing
 
-This project includes:
+Includes:
 
-* **Unit tests:** for the Redux slice (`songsSlice`).
-* **Component tests:** for `AddSong` form using React Testing Library.
+* **Unit tests** for Redux slices (`songsSlice`)
+* **Component tests** for `AddSong` form with React Testing Library
+* Runs in `jest-environment-jsdom`
 
-All tests are run with Jest + `jest-environment-jsdom`.
-
-**Run all tests:**
+Run tests:
 
 ```bash
 npx jest
 ```
----
-
-## 🚀 Bonus Points
-
-- ✅ Manual Webpack config
-- ✅ Pagination
-- ✅ Tests with Jest
-- ✅ Clear commit history with conventional commits
-- ✅ Ready for deployment — can be hosted on Netlify/Vercel
 
 ---
 
 ## 📝 How I verified it works
 
-* Manually tested CRUD + pagination in the browser.
-* Checked backend logs for requests.
-* Ran Jest unit and component tests (`npx jest`).
-* Debugged using Chrome DevTools & console logs.
+* Manually tested all CRUD operations & pagination in the browser
+* Verified backend logs for API requests
+* Ran Jest tests with `npx jest`
+* Debugged using DevTools console logs
+
+---
+
+## 🚀 Bonus Points
+
+* ✅ Manual Webpack config
+* ✅ Connected Redux + Redux-Saga
+* ✅ Full CRUD API in Go
+* ✅ Ready for multi-environment deploy
+* ✅ Clear, conventional commits
 
 ---
 
@@ -114,19 +144,20 @@ SongSaga/
 │   ├── go.mod          # Go module file
 │   └── go.sum          # Go dependencies
 ├── frontend/
-|   ├── src/
-|   │   ├── app/         # store.js, theme.js
-|   │   ├── features/    # Redux slice & saga
-|   │   ├── pages/       # AddSong, EditSong, SongList
-|   │   ├── components/  # Styled Button etc.
-|   ├── public/
-|   │   └── index.html
-|   ├── webpack.config.js
-|   ├── .env
-|   ├── babel.config.js
-|   ├── jest.config (in package.json)
+│   ├── src/
+│   │   ├── app/         # store.js, theme.js
+│   │   ├── features/    # Redux slice & saga
+│   │   ├── pages/       # AddSong, EditSong, SongList
+│   │   ├── components/  # Styled components
+│   ├── public/
+│   │   └── index.html
+│   ├── webpack.config.js
+│   ├── .env
+│   ├── babel.config.js
+│   ├── package.json
 └── README.md           # Project documentation
 ```
+
 ---
 
 ## ✅ Run it locally
@@ -136,3 +167,11 @@ SongSaga/
 3. Start backend: `go run main.go`
 4. Start frontend: `npx webpack serve`
 5. Visit [http://localhost:3000](http://localhost:3000)
+
+---
+
+**Deployed:** [songsage.netlify.app](https://songsage.netlify.app) 🚀
+
+---
+
+Enjoy! 🎵✨
