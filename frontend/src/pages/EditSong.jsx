@@ -37,7 +37,7 @@ export default function EditSong() {
   const [updateModal, setUpdateModal] = useState({ isOpen: false, success: false, message: '' });
 
   useEffect(() => {
-    fetch(`${process.env.API_BASE_URL}/songs?page=1&limit=100`)
+    fetch(`https://songsage-production.up.railway.app/songs?page=1&limit=100`)
       .then(res => res.json())
       .then(data => {
         const found = data.find(s => s.id === parseInt(id));
