@@ -8,7 +8,7 @@ import {
 function* fetchSongs(action) {
   try {
     const { page, limit } = action.payload;
-    const res = yield call(fetch, `${process.env.API_BASE_URL}/songs?page=${page}&limit=${limit}`);
+    const res = yield call(fetch, `https://songsage-production.up.railway.app/songs?page=${page}&limit=${limit}`);
     const data = yield res.json();
     console.log("API response", data)
     yield put(fetchSongsSuccess(data));
