@@ -34,7 +34,7 @@ export default function AddSong() {
     e.preventDefault();
     setSubmitting(true);
     const song = { title, artist, album, year: parseInt(year), genre };
-    const res = await fetch(`${process.env.API_BASE_URL}/songs`, {
+    const res = await fetch(`https://songsage-production.up.railway.app/songs`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(song),

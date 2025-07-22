@@ -72,7 +72,7 @@ export default function SongList() {
 
   const handleDeleteConfirm = async () => {
     if (!selectedSong) return;
-    const res = await fetch(`${process.env.API_BASE_URL}/songs/${selectedSong.id}`, {
+    const res = await fetch(`https://songsage-production.up.railway.app/songs/${selectedSong.id}`, {
       method: 'DELETE',
     });
     if (res.ok) {
