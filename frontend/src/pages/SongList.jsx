@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchSongsRequest } from '../features/songs/songsSlice';
+import { fetchSongsRequest, deleteSongRequest, clearOperation } from '../features/songs/songsSlice';
 import { Link } from 'react-router-dom';
 import styled from '@emotion/styled';
 import SongCard from '../components/SongCard';
@@ -56,31 +56,26 @@ const SkeletonCard = styled.div`
 
 export default function SongList() {
   const dispatch = useDispatch();
-  const { items, loading, page, limit } = useSelector(state => state.songs);
+  const { items, loading, operation } = useSelector(state => state.songs);
   const [search, setSearch] = useState('');
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedSong, setSelectedSong] = useState(null);
 
   useEffect(() => {
-    dispatch(fetchSongsRequest({ page, limit }));
-  }, [dispatch, page, limit]);
+    dispatch(fetchSongsRequest({ page: 1, limit: 10 }));
+    return () => {
+      dispatch(clearOperation());
+    };
+  }, [dispatch]);
 
   const handleDeleteInitiate = (song) => {
     setSelectedSong(song);
     setIsDeleteModalOpen(true);
   };
 
-  const handleDeleteConfirm = async () => {
+  const handleDeleteConfirm = () => {
     if (!selectedSong) return;
-    const res = await fetch(`https://songsage-production.up.railway.app/songs/${selectedSong.id}`, {
-      method: 'DELETE',
-    });
-    if (res.ok) {
-      alert('Deleted!');
-      dispatch(fetchSongsRequest({ page, limit }));
-    } else {
-      alert('Error deleting.');
-    }
+    dispatch(deleteSongRequest(selectedSong.id));
     setIsDeleteModalOpen(false);
     setSelectedSong(null);
   };
@@ -91,13 +86,13 @@ export default function SongList() {
   };
 
   const handlePrev = () => {
-    if (page > 1) {
-      dispatch(fetchSongsRequest({ page: page - 1, limit }));
+    if (operation.page > 1) {
+      dispatch(fetchSongsRequest({ page: operation.page - 1, limit: 10 }));
     }
   };
 
   const handleNext = () => {
-    dispatch(fetchSongsRequest({ page: page + 1, limit }));
+    dispatch(fetchSongsRequest({ page: operation.page + 1, limit: 10 }));
     setSearch('');
   };
 
@@ -138,11 +133,11 @@ export default function SongList() {
         </Grid>
       )}
       <Pagination>
-        <Button onClick={handlePrev} disabled={page === 1} className="bg-gray-600 hover:bg-gray-700">
+        <Button onClick={handlePrev} disabled={operation.page === 1} className="bg-gray-600 hover:bg-gray-700">
           Previous
         </Button>
-        <span className="text-gray-800">Page {page}</span>
-        <Button onClick={handleNext} disabled={items.length < limit} className="bg-gray-600 hover:bg-gray-700">
+        <span className="text-gray-800">Page {operation.page || 1}</span>
+        <Button onClick={handleNext} disabled={items.length < 10} className="bg-gray-600 hover:bg-gray-700">
           Next
         </Button>
       </Pagination>
