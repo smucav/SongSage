@@ -30,11 +30,10 @@ const ModalContent = styled(motion.div)`
 const ButtonGroup = styled.div`
   display: flex;
   justify-content: center;
-  gap: ${props => props.theme.space[3]}px;
   margin-top: ${props => props.theme.space[3]}px;
 `;
 
-export default function DeleteConfirmModal({ isOpen, songTitle, onConfirm, onCancel }) {
+export default function AddConfirmModal({ isOpen, success, songTitle, message, onClose }) {
   if (!isOpen) return null;
 
   return (
@@ -42,7 +41,7 @@ export default function DeleteConfirmModal({ isOpen, songTitle, onConfirm, onCan
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      onClick={onCancel}
+      onClick={onClose}
     >
       <ModalContent
         initial={{ scale: 0.8 }}
@@ -50,22 +49,18 @@ export default function DeleteConfirmModal({ isOpen, songTitle, onConfirm, onCan
         exit={{ scale: 0.8 }}
         onClick={e => e.stopPropagation()}
       >
-        <h2 className="text-xl font-bold mb-4 text-gray-800">Confirm Deletion</h2>
+        <h2 className={`text-xl font-bold mb-4 ${success ? 'text-green-600' : 'text-red-600'}`}>
+          {success ? 'Success' : 'Error'}
+        </h2>
         <p className="text-gray-600 mb-4">
-          Are you sure you want to delete <strong>{songTitle}</strong>?
+          {message} {success && songTitle && <strong>${songTitle}</strong>}
         </p>
         <ButtonGroup>
           <Button
-            onClick={onCancel}
-            className="bg-gray-500 hover:bg-gray-600 text-white"
+            onClick={onClose}
+            className={success ? 'bg-blue-600 hover:bg-blue-700 text-white' : 'bg-gray-500 hover:bg-gray-600 text-white'}
           >
-            Cancel
-          </Button>
-          <Button
-            onClick={onConfirm}
-            className="bg-blue-600 hover:bg-blue-700 text-white"
-          >
-            Delete
+            OK
           </Button>
         </ButtonGroup>
       </ModalContent>

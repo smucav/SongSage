@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import styled from '@emotion/styled';
 import Modal from '../components/Modal';
 import UpdateConfirmModal from '../components/UpdateConfirmModal';
 import Button from '../components/Button';
+import { fetchSongRequest, updateSongRequest, clearOperation } from '../features/songs/songsSlice';
 
 const Form = styled.form`
   display: flex;
@@ -24,6 +26,8 @@ const Input = styled.input`
 export default function EditSong() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { currentSong, loading, error, operation } = useSelector(state => state.songs);
   const [isOpen, setIsOpen] = useState(true);
   const [song, setSong] = useState({
     title: '',
@@ -32,34 +36,19 @@ export default function EditSong() {
     year: '',
     genre: '',
   });
-  const [loading, setLoading] = useState(true);
-  const [submitting, setSubmitting] = useState(false);
-  const [updateModal, setUpdateModal] = useState({ isOpen: false, success: false, message: '' });
 
   useEffect(() => {
-    fetch(`https://songsage-production.up.railway.app/songs?page=1&limit=100`)
-      .then(res => res.json())
-      .then(data => {
-        const found = data.find(s => s.id === parseInt(id));
-        if (found) {
-          setSong(found);
-          setLoading(false);
-        } else {
-          setUpdateModal({
-            isOpen: true,
-            success: false,
-            message: 'Song not found',
-          });
-        }
-      })
-      .catch(() => {
-        setUpdateModal({
-          isOpen: true,
-          success: false,
-          message: 'Error fetching song',
-        });
-      });
-  }, [id]);
+    dispatch(fetchSongRequest({ id }));
+    return () => {
+      dispatch(clearOperation());
+    };
+  }, [dispatch, id]);
+
+  useEffect(() => {
+    if (currentSong && currentSong.id === parseInt(id)) {
+      setSong(currentSong);
+    }
+  }, [currentSong, id]);
 
   const handleChange = e => {
     const { name, value } = e.target;
@@ -68,31 +57,12 @@ export default function EditSong() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setSubmitting(true);
-    const res = await fetch(`${process.env.API_BASE_URL}/songs/${id}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ ...song, id: parseInt(id), year: parseInt(song.year) }),
-    });
-    setSubmitting(false);
-    if (res.ok) {
-      setUpdateModal({
-        isOpen: true,
-        success: true,
-        message: 'Song updated successfully!',
-      });
-    } else {
-      setUpdateModal({
-        isOpen: true,
-        success: false,
-        message: 'Error updating song.',
-      });
-    }
+    dispatch(updateSongRequest({ ...song, id: parseInt(id), year: parseInt(song.year) }));
   };
 
   const handleCloseUpdateModal = () => {
-    setUpdateModal({ isOpen: false, success: false, message: '' });
-    if (updateModal.success || updateModal.message.includes('not found') || updateModal.message.includes('Error fetching')) {
+    dispatch(clearOperation());
+    if (operation.success || error) {
       navigate('/');
     }
   };
@@ -146,18 +116,18 @@ export default function EditSong() {
           />
           <Button
             type="submit"
-            disabled={submitting}
+            disabled={operation.loading}
             className="bg-blue-600 hover:bg-blue-700"
           >
-            {submitting ? 'Updating...' : 'Update Song'}
+            {operation.loading ? 'Updating...' : 'Update Song'}
           </Button>
         </Form>
       </Modal>
       <UpdateConfirmModal
-        isOpen={updateModal.isOpen}
-        success={updateModal.success}
+        isOpen={operation.type === 'update' && (operation.success || operation.error) || error}
+        success={operation.success && !error}
         songTitle={song.title}
-        message={updateModal.message}
+        message={operation.success ? 'Song updated successfully!' : operation.error || error || 'Error updating song.'}
         onClose={handleCloseUpdateModal}
       />
     </>
