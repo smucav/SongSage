@@ -53,7 +53,7 @@ export default function AddConfirmModal({ isOpen, success, songTitle, message, o
           {success ? 'Success' : 'Error'}
         </h2>
         <p className="text-gray-600 mb-4">
-          {message} {success && songTitle && <strong>${songTitle}</strong>}
+          {message} {success && songTitle && <strong>{songTitle}</strong>}
         </p>
         <ButtonGroup>
           <Button
